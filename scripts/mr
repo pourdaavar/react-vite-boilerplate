@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+
+RESET='\033[39m'
+CYAN='\033[1;36m'
+YELLOW='\033[1;93m'
+GREEN='\033[1;32m'
+ERR='\033[1;91m'
+BOLD='\033[1m'
+
+type glab >/dev/null 2>&1 || {
+    echo -e "${ERR}Sorry, this script needs gitlab-cli.${RESET}"
+    exit 1
+}
+
+ME=$(git config --get user.username)
+
+DEVS=("pourdaavar","Erfan","hosynahmde","mmdaminah","3ina","alirezanqp")
+
+REVIEWERS="$(echo "${DEVS}" | sed -r "s/(,$ME)|($ME,)//g")"
+echo -en "${BOLD}"
+
+BASE=${1:-"dev"}
+BRANCH_NAME=$(git branch --show-current)
+
+TITLE=$(
+    echo "${BRANCH_NAME}" |
+        sed -r "s/\-/\ /g" |
+        sed -r "s/([0-9]*) (backend|frontend|ops) (.*)/\2(#\1): \3/gi" |
+        sed -r 's/[^ _-]*/\u&/g'
+)
+
+read -e -p "$(echo -ne "${BOLD}title: ${YELLOW}")" -i "$TITLE" TITLE
+echo -ne "${RESET}\n"
+
+TITLE_WORDS=($TITLE)
+
+VERB=${TITLE_WORDS[1]}
+REST=${TITLE_WORDS[*]:2}
+
+if [[ "$VERB" =~ (s|sh|ch|x|z)$ ]]; then
+    VERB+="es"
+else
+    VERB+="s"
+fi
+
+read -e -p "$(echo -ne "${BOLD}body: ${YELLOW}")" -i "This MR ${VERB,,} ${REST,,}." BODY
+echo -ne "${RESET}\n"
+
+echo -e "Creating Merge Request:"
+echo -e "title:\t${CYAN}$TITLE${RESET}"
+echo -e "body:\t${CYAN}$BODY${RESET}"
+echo -e "base:\t${CYAN}$BASE${RESET}"
+echo -en "Continue? [${GREEN}y${RESET}/${ERR}n${RESET}]${RESET} "
+read -rn1 -p "" confirm
+
+
+
+[[ ! $confirm =~ ^([yY])$ ]] && exit 1
+echo -e "\n"
+
+glab mr create --target-branch "$BASE" --title "$TITLE" --description "$BODY" --assignee "$ME" --reviewer "$REVIEWERS" --remove-source-branch --squash-before-merge --push
