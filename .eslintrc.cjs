@@ -5,7 +5,8 @@ module.exports = init({
   modules: {
     auto: true,
     esm: true,
-    cspell: false,
+    import: true,
+    prettier: true,
 
     typescript: {
       parserProject: ['./tsconfig.json'],
@@ -19,6 +20,8 @@ module.exports = init({
       files: ['*.ts', '*.tsx', '*.mts', '*.cts', '*.json'],
       rules: {
         'import/extensions': ['off'],
+        '@typescript-eslint/object-curly-spacing': 'off',
+        '@typescript-eslint/no-useless-template-literals': 'off',
       },
     },
   ],

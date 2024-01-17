@@ -1,0 +1,25 @@
+{
+  "version": "0.2",
+  "language": "en",
+  "words": ["mantine", "tanstack"],
+  "ignoreWords": [],
+  "ignorePaths": [
+    "src/messages*",
+    "node_modules/**",
+    ".deployment/**",
+    "endpoints/**",
+    "*coverage/**",
+    ".husky/**",
+    "scripts/**",
+    ".env*",
+    "*.json",
+    ".github/**",
+    ".gitignore",
+    "dist/**",
+    "docs/**",
+    "**.i18n.ts",
+    "index.html",
+    "**.svg",
+    "pnpm-lock.yaml"
+  ]
+}
