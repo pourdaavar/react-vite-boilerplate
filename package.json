@@ -11,7 +11,8 @@
     "preview": "vite preview",
     "spell": "cspell ./src/**/*  --no-progress",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "lint-staged": "lint-staged"
   },
   "dependencies": {
     "@mantine/core": "7.4.1",
